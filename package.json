@@ -1,0 +1,15 @@
+{
+  "name": "steal_nft",
+  "version": "1.0.0",
+  "description": "steal_nft is here to help you steal NFTs",
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@openzeppelin/contracts": "^5.0.2",
+    "hardhat": "^2.22.3"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0"
+  }
+}
