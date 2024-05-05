@@ -5,15 +5,16 @@ pragma solidity 0.8.25;
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 // Contract
-contract StealNft is ERC721, ERC721URIStorage {
+contract StealNft is ERC721, ERC721URIStorage, Ownable {
 
     // Variables
     uint256 private _nextTokenId;
 
     // Constructor
-    constructor() ERC721("StealNft", "STLNFT") { }
+    constructor() ERC721("StealNft", "STLNFT") Ownable(msg.sender) { }
 
     // Function Overrides
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, ERC721URIStorage) returns (bool) {
