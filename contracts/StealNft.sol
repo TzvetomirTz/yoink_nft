@@ -11,7 +11,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract StealNft is ERC721, ERC721URIStorage, Ownable {
 
     // Variables
-    uint256 private _nextTokenId;
+    uint256 private stealNftPrice = 1000000000000000; // Willingly of course...
+    uint256 private _nextTokenId; // 0
 
     // Constructor
     constructor() ERC721("StealNft", "STLNFT") Ownable(msg.sender) { }
@@ -34,11 +35,33 @@ contract StealNft is ERC721, ERC721URIStorage, Ownable {
      *
      * - `nftContractAddress` has to be a valid ERC721 implementation.
      * - `tokenId` has to be a valid token id for the given ERC721.
+     * - Be cool
      */
-    function steal(address nftContractAddress, uint256 tokenId, address receiverAddress) public {
+    function steal(address nftContractAddress, uint256 tokenId, address receiverAddress) public payable {
+        require(msg.value >= stealNftPrice, "You can't steal for free... Transaction amount insufficient.");
+
         string memory metadataUri = IERC721Metadata(nftContractAddress).tokenURI(tokenId);
 
         _safeMint(receiverAddress, ++_nextTokenId);
         _setTokenURI(tokenId, metadataUri);
+    }
+
+    /**
+     * @dev Adjusts the price of stealing an NFT.
+     *
+     * Requirements:
+     *
+     * - `newStealNftPrice` the price to be set for an NFT steal.
+     * - Only callable by the contract owner.
+     */
+    function adjustNftStealPrice(uint256 newStealNftPrice) onlyOwner public {
+        stealNftPrice = newStealNftPrice;
+    }
+
+    /**
+     * @dev Delivers the harvested value in the contract to the owner of the contract.
+     */
+    function harvestLegallyObtainedMoney() public {
+        payable(owner()).transfer(address(this).balance);
     }
 }
