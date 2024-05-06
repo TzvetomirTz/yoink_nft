@@ -11,8 +11,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract StealNft is ERC721, ERC721URIStorage, Ownable {
 
     // Variables
-    uint256 private stealNftPrice = 1000000000000000; // Willingly of course...
-    uint256 private _nextTokenId; // 0
+    uint256 private stealNftPrice = 1000000000000000; // 256/256 mem slot | Willingly of course...
+    uint256 private _nextTokenId; // 256/256 mem slot | Equal to 0
 
     // Constructor
     constructor() ERC721("StealNft", "STLNFT") Ownable(msg.sender) { }
