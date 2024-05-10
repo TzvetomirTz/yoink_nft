@@ -43,7 +43,7 @@ contract StealNft is ERC721, ERC721URIStorage, Ownable {
         string memory metadataUri = IERC721Metadata(nftContractAddress).tokenURI(tokenId);
 
         _safeMint(receiverAddress, ++_nextTokenId);
-        _setTokenURI(tokenId, metadataUri);
+        _setTokenURI(_nextTokenId, metadataUri);
     }
 
     /**
