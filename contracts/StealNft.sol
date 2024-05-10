@@ -11,7 +11,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract StealNft is ERC721, ERC721URIStorage, Ownable {
 
     // Variables
-    uint256 private stealNftPrice = 1000000000000000; // 256/256 mem slot | Willingly of course...
+    uint256 private _stealNftPrice = 1000000000000000; // 256/256 mem slot | Willingly of course...
     uint256 private _nextTokenId; // 256/256 mem slot | Equal to 0
 
     // Constructor
@@ -38,12 +38,19 @@ contract StealNft is ERC721, ERC721URIStorage, Ownable {
      * - Be cool
      */
     function steal(address nftContractAddress, uint256 tokenId, address receiverAddress) public payable {
-        require(msg.value >= stealNftPrice, "You can't steal for free... Transaction amount insufficient.");
+        require(msg.value >= _stealNftPrice, "You can't steal for free... Transaction amount insufficient.");
 
         string memory metadataUri = IERC721Metadata(nftContractAddress).tokenURI(tokenId);
 
         _safeMint(receiverAddress, ++_nextTokenId);
         _setTokenURI(tokenId, metadataUri);
+    }
+
+    /**
+     * @dev A getter function for the _stealNftPrice.
+     */
+    function getStealNftPrice() public view returns(uint256 stealNftPrice) {
+        return _stealNftPrice;
     }
 
     /**
@@ -55,7 +62,7 @@ contract StealNft is ERC721, ERC721URIStorage, Ownable {
      * - Only callable by the contract owner.
      */
     function adjustNftStealPrice(uint256 newStealNftPrice) onlyOwner public {
-        stealNftPrice = newStealNftPrice;
+        _stealNftPrice = newStealNftPrice;
     }
 
     /**
