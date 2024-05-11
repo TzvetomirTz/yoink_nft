@@ -28,16 +28,14 @@ describe('StealNft', () => {
     });
 
     it('Should mint NFT in StealNFT contract with the same metadata as the original one', async () => {
-        const originTokenMetadata = await erc721Mock.tokenURI(originTokenId);
         await stealNft.connect(chad1).steal(
             await erc721Mock.getAddress(),
             originTokenId,
             chad1.address,
             { value: stealNftPrice }
         );
-        const stolenTokenMetadata = await stealNft.tokenURI(1);
 
-        expect(stolenTokenMetadata).to.equal(originTokenMetadata);
+        expect(await stealNft.tokenURI(1)).to.equal(await erc721Mock.tokenURI(originTokenId));
         expect(await stealNft.ownerOf(1)).to.equal(chad1.address);
     });
 
@@ -59,7 +57,6 @@ describe('StealNft', () => {
     });
 
     it('Should mint multiple NFTs in StealNFT contract with the same metadata as the original one to the same owner', async () => {
-        const originTokenMetadata = await erc721Mock.tokenURI(originTokenId);
         await stealNft.connect(chad1).steal(
             await erc721Mock.getAddress(),
             originTokenId,
@@ -73,6 +70,7 @@ describe('StealNft', () => {
             { value: stealNftPrice }
         );
 
+        const originTokenMetadata = await erc721Mock.tokenURI(originTokenId);
         const stolenTokenMetadata1 = await stealNft.tokenURI(1);
         const stolenTokenMetadata2 = await stealNft.tokenURI(2);
 
@@ -83,7 +81,6 @@ describe('StealNft', () => {
     });
 
     it('Should mint multiple NFTs in StealNFT contract with the same metadata as the original one to different owners', async () => {
-        const originTokenMetadata = await erc721Mock.tokenURI(originTokenId);
         await stealNft.connect(chad1).steal(
             await erc721Mock.getAddress(),
             originTokenId,
@@ -96,7 +93,8 @@ describe('StealNft', () => {
             chad2.address,
             { value: stealNftPrice }
         );
-
+    
+        const originTokenMetadata = await erc721Mock.tokenURI(originTokenId);
         const stolenTokenMetadata1 = await stealNft.tokenURI(1);
         const stolenTokenMetadata2 = await stealNft.tokenURI(2);
 
@@ -114,9 +112,8 @@ describe('StealNft', () => {
             chad2.address,
             { value: stealNftPrice }
         );
-        const stolenTokenMetadata = await stealNft.tokenURI(1);
 
-        expect(stolenTokenMetadata).to.equal(originTokenMetadata);
+        expect(await stealNft.tokenURI(1)).to.equal(originTokenMetadata);
         expect(await stealNft.ownerOf(1)).to.equal(chad2.address);
     });
 
@@ -128,9 +125,8 @@ describe('StealNft', () => {
             chad1.address,
             { value: BigInt(Number(stealNftPrice) * 2) }
         );
-        const stolenTokenMetadata = await stealNft.tokenURI(1);
 
-        expect(stolenTokenMetadata).to.equal(originTokenMetadata);
+        expect(await stealNft.tokenURI(1)).to.equal(originTokenMetadata);
         expect(await stealNft.ownerOf(1)).to.equal(chad1.address);
     });
 
@@ -155,10 +151,9 @@ describe('StealNft', () => {
             chad2.address,
             { value: stealNftPrice }
         );
-        await stealNft.harvestLegallyObtainedMoney();
 
-        const finalOwnerBalance = await ethers.provider.getBalance(pleb.address);
-        expect(finalOwnerBalance).to.be.greaterThan(initialOwnerBalance);
+        await stealNft.harvestLegallyObtainedMoney();
+        expect(await ethers.provider.getBalance(pleb.address)).to.be.greaterThan(initialOwnerBalance);
     });
 
     it('Should transfer profits to the contract owner when harvest is called by a random user', async () => {
@@ -170,9 +165,30 @@ describe('StealNft', () => {
             chad2.address,
             { value: stealNftPrice }
         );
-        await stealNft.connect(chad1).harvestLegallyObtainedMoney();
 
-        const finalOwnerBalance = await ethers.provider.getBalance(pleb.address);
-        expect(finalOwnerBalance).to.be.greaterThan(initialOwnerBalance);
+        await stealNft.connect(chad1).harvestLegallyObtainedMoney();
+        expect(await ethers.provider.getBalance(pleb.address)).to.be.greaterThan(initialOwnerBalance);
+    });
+
+    it('Should mint NFT in StealNFT contract as a copy of another StealNft token', async () => {
+        await stealNft.connect(chad1).steal(
+            await erc721Mock.getAddress(),
+            originTokenId,
+            chad1.address,
+            { value: stealNftPrice }
+        );
+        await stealNft.connect(chad2).steal(
+            await erc721Mock.getAddress(),
+            originTokenId,
+            chad2.address,
+            { value: stealNftPrice }
+        );
+
+        const originTokenMetadata = await stealNft.tokenURI(1);
+        const stolenTokenMetadata = await stealNft.tokenURI(2);
+
+        expect(stolenTokenMetadata).to.equal(originTokenMetadata);
+        expect(await stealNft.ownerOf(1)).to.equal(chad1.address);
+        expect(await stealNft.ownerOf(2)).to.equal(chad2.address);
     });
 });
