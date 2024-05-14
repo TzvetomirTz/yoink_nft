@@ -5,4 +5,6 @@ StealNFT is here to (de)revolutionize the NFTs and further decentralize the owne
 Enjoy the freedom of using StealNFT!
 
 ## Run tests locally
-`npx hardhat test`
+```shell
+npx hardhat test
+```
