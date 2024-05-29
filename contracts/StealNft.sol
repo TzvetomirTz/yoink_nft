@@ -8,23 +8,14 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 // Contract
-contract StealNft is ERC721, ERC721URIStorage, Ownable {
+contract StealNft is ERC721URIStorage, Ownable {
 
     // Variables
     uint256 private _stealNftPrice = 1000000000000000; // 256/256 mem slot | Willingly of course...
     uint256 private _nextTokenId; // 256/256 mem slot | Equal to 0
 
     // Constructor
-    constructor() ERC721("StealNft", "STLNFT") Ownable(msg.sender) { }
-
-    // Function Overrides
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, ERC721URIStorage) returns (bool) {
-        return super.supportsInterface(interfaceId);
-    }
-
-    function tokenURI(uint256 tokenId) public view virtual override(ERC721, ERC721URIStorage) returns (string memory) {
-        return super.tokenURI(tokenId);
-    }
+    constructor() ERC721("StealNft", "STLNFT") { }
 
     // Functions
 
