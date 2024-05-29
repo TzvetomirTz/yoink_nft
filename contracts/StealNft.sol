@@ -15,7 +15,7 @@ contract StealNft is ERC721URIStorage, Ownable {
     uint256 private _nextTokenId; // 256/256 mem slot | Equal to 0
 
     // Constructor
-    constructor() ERC721("StealNft", "STLNFT") { }
+    constructor() ERC721("StealNft", "STLNFT") Ownable(msg.sender) { }
 
     // Functions
 
