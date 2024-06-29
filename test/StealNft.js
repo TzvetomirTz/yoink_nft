@@ -1,4 +1,4 @@
-const { expect } = require('chai');
+const { expect, assert } = require('chai');
 const { ethers } = require('hardhat');
 
 describe('StealNft', () => {
@@ -40,20 +40,32 @@ describe('StealNft', () => {
     });
 
     it('Should fail nft steal due to not sending any eth in the transaction', async () => {
-        await expect(
-            stealNft.connect(chad1).steal(await erc721Mock.getAddress(), originTokenId, chad1.address)
-        ).to.be.rejectedWith("VM Exception while processing transaction: reverted with reason string 'You can't steal for free... Transaction amount insufficient.'");
+        try {
+            await stealNft.connect(chad1).steal(await erc721Mock.getAddress(), originTokenId, chad1.address)
+        } catch (err) {
+            const errStr = "VM Exception while processing transaction: reverted with reason string 'You can't steal for free... Transaction amount insufficient.'";
+            expect(err.message.includes(errStr)).to.equal(true);
+            return;
+        }
+
+        assert.fail(0, 1, 'Exception not thrown');
     });
 
     it('Should fail nft steal due to not sending enough eth in the transaction', async () => {
-        await expect(
-            stealNft.connect(chad1).steal(
+        try {
+            await stealNft.connect(chad1).steal(
                 await erc721Mock.getAddress(),
                 originTokenId,
                 chad1.address,
                 { value: BigInt(Number(stealNftPrice) / 2) }
             )
-        ).to.be.rejectedWith("VM Exception while processing transaction: reverted with reason string 'You can't steal for free... Transaction amount insufficient.'");
+        } catch (err) {
+            const errStr = "VM Exception while processing transaction: reverted with reason string 'You can't steal for free... Transaction amount insufficient.'";
+            expect(err.message.includes(errStr)).to.equal(true);
+            return;
+        }
+
+        assert.fail(0, 1, 'Exception not thrown');
     });
 
     it('Should mint multiple NFTs in StealNFT contract with the same metadata as the original one to the same owner', async () => {
@@ -137,9 +149,15 @@ describe('StealNft', () => {
     });
 
     it('Should NOT adjust stealNftPrice when adjustment is called by random caller who is not the contract creator', async () => {
-        await expect(
-            stealNft.connect(chad1).adjustNftStealPrice(BigInt(Number(stealNftPrice) * 2))
-        ).to.be.rejectedWith(`VM Exception while processing transaction: reverted with custom error 'OwnableUnauthorizedAccount("${chad1.address}")'`);
+        try {
+            await stealNft.connect(chad1).adjustNftStealPrice(BigInt(Number(stealNftPrice) * 2))
+        } catch (err) {
+            const errStr = `VM Exception while processing transaction: reverted with custom error 'OwnableUnauthorizedAccount("${chad1.address}")'`;
+            expect(err.message.includes(errStr)).to.equal(true);
+            return;
+        }
+
+        assert.fail(0, 1, 'Exception not thrown');
     });
 
     it('Should transfer profits to the contract owner when harvest is called by the owner', async () => {
@@ -153,7 +171,7 @@ describe('StealNft', () => {
         );
 
         await stealNft.harvestLegallyObtainedMoney();
-        expect(await ethers.provider.getBalance(pleb.address)).to.be.greaterThan(initialOwnerBalance);
+        expect(Number(await ethers.provider.getBalance(pleb.address))).to.be.greaterThan(Number(initialOwnerBalance));
     });
 
     it('Should transfer profits to the contract owner when harvest is called by a random user', async () => {
@@ -167,7 +185,7 @@ describe('StealNft', () => {
         );
 
         await stealNft.connect(chad1).harvestLegallyObtainedMoney();
-        expect(await ethers.provider.getBalance(pleb.address)).to.be.greaterThan(initialOwnerBalance);
+        expect(Number(await ethers.provider.getBalance(pleb.address))).to.be.greaterThan(Number(initialOwnerBalance));
     });
 
     it('Should mint NFT in StealNFT contract as a copy of another StealNft token', async () => {
