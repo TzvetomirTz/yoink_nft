@@ -1,7 +1,7 @@
 {
-  "name": "steal_nft",
+  "name": "yoink_nft",
   "version": "1.0.0",
-  "description": "steal_nft is here to help you steal NFTs",
+  "description": "yoink_nft is here to help you yoink NFTs",
   "author": "",
   "license": "MIT",
   "dependencies": {

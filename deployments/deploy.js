@@ -1,9 +1,9 @@
 const { ethers } = require('hardhat');
 
 async function main() {
-    const StealNft = await ethers.getContractFactory("StealNft");
-    const stealNft = await StealNft.deploy();
-    console.log("Contract Deployed to Address:", stealNft.address);
+    const YoinkNft = await ethers.getContractFactory("YoinkNft");
+    const yoinkNft = await YoinkNft.deploy();
+    console.log("Contract Deployed to Address:", yoinkNft.address);
   }
   main()
     .then(() => process.exit(0))

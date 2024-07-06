@@ -8,14 +8,14 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 // Contract
-contract StealNft is ERC721URIStorage, Ownable {
+contract YoinkNft is ERC721URIStorage, Ownable {
 
     // Variables
-    uint256 private _stealNftPrice = 1000000000000000; // 256/256 mem slot | Willingly of course...
+    uint256 private _yoinkNftPrice = 1000000000000000; // 256/256 mem slot
     uint256 private _nextTokenId; // 256/256 mem slot | Equal to 0
 
     // Constructor
-    constructor() ERC721("StealNft", "STLNFT") Ownable(msg.sender) { }
+    constructor() ERC721("YoinkNft", "YOINK") Ownable(msg.sender) { }
 
     // Functions
 
@@ -28,8 +28,8 @@ contract StealNft is ERC721URIStorage, Ownable {
      * - `tokenId` has to be a valid token id for the given ERC721.
      * - Be cool
      */
-    function steal(address nftContractAddress, uint256 tokenId, address receiverAddress) public payable {
-        require(msg.value >= _stealNftPrice, "You can't steal for free... Transaction amount insufficient.");
+    function yoink(address nftContractAddress, uint256 tokenId, address receiverAddress) public payable {
+        require(msg.value >= _yoinkNftPrice, "You can't yoink for free... Transaction amount insufficient.");
 
         string memory metadataUri = IERC721Metadata(nftContractAddress).tokenURI(tokenId);
 
@@ -38,22 +38,22 @@ contract StealNft is ERC721URIStorage, Ownable {
     }
 
     /**
-     * @dev A getter function for the _stealNftPrice.
+     * @dev A getter function for the _yoinkNftPrice.
      */
-    function getStealNftPrice() public view returns(uint256 stealNftPrice) {
-        return _stealNftPrice;
+    function getYoinkNftPrice() public view returns(uint256 yoinkNftPrice) {
+        return _yoinkNftPrice;
     }
 
     /**
-     * @dev Adjusts the price of stealing an NFT.
+     * @dev Adjusts the price of yoinking an NFT.
      *
      * Requirements:
      *
-     * - `newStealNftPrice` the price to be set for an NFT steal.
+     * - `newYoinkNftPrice` the price to be set for an NFT yoink.
      * - Only callable by the contract owner.
      */
-    function adjustNftStealPrice(uint256 newStealNftPrice) onlyOwner public {
-        _stealNftPrice = newStealNftPrice;
+    function adjustNftYoinkPrice(uint256 newYoinkNftPrice) onlyOwner public {
+        _yoinkNftPrice = newYoinkNftPrice;
     }
 
     /**
