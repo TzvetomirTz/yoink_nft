@@ -10,4 +10,5 @@ npx hardhat test
 ```
 
 ## Contract address
-Sepolia: 0xdf193E18437A2E68f098DA57C65E249cb2F7f613
+Sepolia: 0xdf193E18437A2E68f098DA57C65E249cb2F7f613 (Support temporarily dropped)
+Mainnet: 0x3983C4E3955AB1C423CC5F751cBb847065E66d1A
